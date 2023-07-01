@@ -16,7 +16,18 @@ const io = socketio(server, {
 const client = new Client();
 
 async function getMessages() {
-	return client.list("M_") || [];
+	const messages = await client.list("M_");
+	let results = [];
+
+	for (let i = 0; i < messages.length; i++) {
+		const message = await client.get(messages[i]);
+
+		console.log("message: " + JSON.stringify(message));
+
+		results.push(message);
+	}
+
+	return results;
 }
 
 io.on("connection", async (socket) => {
@@ -24,13 +35,22 @@ io.on("connection", async (socket) => {
 
 	socket.emit("renderAllMessages", await getMessages());
 
-	socket.on("sendMessage", async (message) => {
+	socket.on("message", async (message) => {
 		console.log("new message: " + JSON.stringify(message));
 
-		await client.set("M_", {
-			content: message.content,
+		if (message.message.length > 200) {
+			console.warn("message too long");
+
+			socket.emit("alert", "message too long");
+
+			return;
+		}
+
+		await client.set("M_" + message.id, {
+			content: message.message,
 			author: message.author,
 			date: message.date,
+			id: message.id,
 		});
 
 		io.sockets.emit("renderMessage", message);

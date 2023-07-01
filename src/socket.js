@@ -6,5 +6,9 @@ export let socket;
 export function init() {
 	socket = io(REPL_URL);
 
+	socket.on("alert", (msg) => {
+		alert("⚠️ " + msg);
+	});
+
 	console.log("connected");
 }

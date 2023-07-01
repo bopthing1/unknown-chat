@@ -7,11 +7,15 @@ export default function ChatContainer() {
 	const [messages, setMessages] = useState([]);
 
 	socket.on("renderAllMessages", (messages) => {
+		// console.log(messages);
+
 		setMessages(messages);
 	});
 
 	socket.on("renderMessage", (message) => {
 		const newMessages = [...messages, message];
+
+		console.log(message);
 
 		setMessages(newMessages);
 	});
@@ -21,9 +25,10 @@ export default function ChatContainer() {
 			{messages.map((m) => {
 				return (
 					<Message
-						author={"unknown " + Math.random() * 10000}
-						content={"uu"}
-						key={m}
+						id={m.id || "wwhat"}
+						author={m.author}
+						content={m.content || m.message}
+						key={m.id}
 					/>
 				);
 			})}
