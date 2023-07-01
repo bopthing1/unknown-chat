@@ -1,0 +1,15 @@
+.message {
+    background-color: rgb(219, 219, 219);
+    border-top: 100%;
+    border-bottom: 100%;
+    margin: 0.4%;
+    padding: 0.4%;
+}
+
+.message .author {
+    font-weight: bold;
+}
+
+.message * {
+    margin-left: 0.2%;
+}
